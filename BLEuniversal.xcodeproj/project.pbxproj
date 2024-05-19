@@ -83,6 +83,7 @@
 		EB08AC7D2BFA6C99008E4880 /* BLEuniversalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BLEuniversalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB08AC812BFA6C99008E4880 /* BLEuniversalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEuniversalUITests.swift; sourceTree = "<group>"; };
 		EB08AC832BFA6C99008E4880 /* BLEuniversalUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEuniversalUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EBA1BC5B2BFA8246009E65E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EBBC851D2BFA700500CE9E6C /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		EBBC851E2BFA700500CE9E6C /* OTAManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTAManager.swift; sourceTree = "<group>"; };
 		EBBC851F2BFA700500CE9E6C /* OTAUpdateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTAUpdateService.swift; sourceTree = "<group>"; };
@@ -171,6 +172,7 @@
 		EB08AC642BFA6C98008E4880 /* BLEuniversal */ = {
 			isa = PBXGroup;
 			children = (
+				EBA1BC5B2BFA8246009E65E8 /* Info.plist */,
 				EB08AC652BFA6C98008E4880 /* BLEuniversalApp.swift */,
 				EB08AC692BFA6C99008E4880 /* Assets.xcassets */,
 				EB08AC6B2BFA6C99008E4880 /* BLEuniversal.entitlements */,
@@ -616,13 +618,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BLEuniversal/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = 38;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to view and modify data on your BLE devices. It does not send any information outside the app. There are no network permissions granted.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -645,6 +650,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pedromartinezweb.BLEuniversal;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.pedromartinezweb.BLEUniversal;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = com.pedromartinezweb.BLEUniversal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -663,13 +670,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BLEuniversal/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = 38;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app uses Bluetooth to view and modify data on your BLE devices. It does not send any information outside the app. There are no network permissions granted.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -692,6 +702,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pedromartinezweb.BLEuniversal;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.pedromartinezweb.BLEUniversal;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = com.pedromartinezweb.BLEUniversal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
