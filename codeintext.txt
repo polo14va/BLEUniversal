@@ -1,0 +1,2990 @@
+/Users/pedro/Documents/UOC/TFG/BLEuniversal/BLEuniversal
+├── Assets.xcassets
+│   ├── AccentColor.colorset
+│   │   └── Contents.json
+│   ├── AppIconIos.appiconset
+│   │   ├── BLEUniversal icono v2-1024.png
+│   │   ├── BLEUniversal icono v2-20.png
+│   │   ├── BLEUniversal icono v2-20@2x.png
+│   │   ├── BLEUniversal icono v2-20@3x.png
+│   │   ├── BLEUniversal icono v2-29.png
+│   │   ├── BLEUniversal icono v2-29@2x.png
+│   │   ├── BLEUniversal icono v2-29@3x.png
+│   │   ├── BLEUniversal icono v2-40.png
+│   │   ├── BLEUniversal icono v2-40@2x.png
+│   │   ├── BLEUniversal icono v2-40@3x.png
+│   │   ├── BLEUniversal icono v2-60@2x.png
+│   │   ├── BLEUniversal icono v2-60@3x.png
+│   │   ├── BLEUniversal icono v2-76.png
+│   │   ├── BLEUniversal icono v2-76@2x.png
+│   │   ├── BLEUniversal icono v2-83.5@2x.png
+│   │   └── Contents.json
+│   ├── AppIconMac.appiconset
+│   │   ├── BLEUniversal icono v2-1024.png
+│   │   ├── BLEUniversal icono v2-128.png
+│   │   ├── BLEUniversal icono v2-16.png
+│   │   ├── BLEUniversal icono v2-256.png
+│   │   ├── BLEUniversal icono v2-32.png
+│   │   ├── BLEUniversal icono v2-512.png
+│   │   ├── BLEUniversal icono v2-64.png
+│   │   └── Contents.json
+│   ├── Contents.json
+│   └── Icono.imageset
+│       ├── BLEUniversal icono v2 1.png
+│       ├── BLEUniversal icono v2 2.png
+│       ├── BLEUniversal icono v2.png
+│       └── Contents.json
+├── BLEuniversal.entitlements
+├── BLEuniversalApp.swift
+├── Delegates
+│   ├── BLEPeripheralDelegate.swift
+│   ├── BluetoothDelegate.swift
+│   ├── FileUploadDelegate.swift
+│   ├── OTAProgress.swift
+│   └── OTAUpdateServiceDelegate.swift
+├── Info.plist
+├── Launch Screen.storyboard
+├── Models
+│   ├── CBCharacteristicProperties.swift
+│   ├── Characteristic.swift
+│   ├── DataFormat.swift
+│   ├── DiscoveredPeripheral.swift
+│   ├── FirmwareMetadata.swift
+│   ├── Item.swift
+│   ├── NavigationItem.swift
+│   ├── Peripheral.swift
+│   ├── PeripheralData.swift
+│   ├── PeripheralRow.swift
+│   ├── Service.swift
+│   ├── ServiceNames.swift
+│   ├── SimpleCharacteristic.swift
+│   └── SimpleService.swift
+├── Preview Content
+│   └── Preview Assets.xcassets
+│       └── Contents.json
+├── Services
+│   ├── BLEManager.swift
+│   ├── OTAManager.swift
+│   ├── OTAUpdateService.swift
+│   ├── PeripheralManager.swift
+│   └── ServiceDiscoveryManager.swift
+├── Utilities
+│   ├── BluetoothError.swift
+│   ├── DocumentPicker.swift
+│   ├── Extensions.swift
+│   └── handleUpdatedValue.swift
+└── Views
+    ├── ContentViewIOS.swift
+    ├── ContentViewMac.swift
+    ├── CharacteristicDetailView.swift
+    ├── DetailView.swift
+    ├── FileUploadView.swift
+    ├── OTAProgressView.swift
+    ├── PeripheralDetailView.swift
+    ├── ServiceDetailView.swift
+    ├── SettingsView.swift
+    └── SuccessView.swift
+
+13 directories, 73 files
+Path: Models/SimpleService.swift
+
+//
+//  SimpleService.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 11/2/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import Foundation
+import CoreBluetooth
+
+struct SimpleService: Identifiable, Hashable {
+    var id: String { service.uuid.uuidString }
+    let service: CBService
+    var characteristics: [SimpleCharacteristic] = []
+    var characteristicsCount: Int { characteristics.count }
+    var allowsNotifications: Bool {
+        characteristics.contains { $0.characteristic.properties.contains(.notify) }
+    }
+    
+    
+    init(service: CBService) {
+        self.service = service
+    }
+}
+
+
+Path: Models/Peripheral.swift
+
+//
+//  Peripheral.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 15/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+struct Peripheral {
+    var peripheral: CBPeripheral
+    var services: [Service]
+}
+
+
+Path: Models/FirmwareMetadata.swift
+
+//
+//  FirmwareMetadata.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 1/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+struct FirmwareMetadata: Codable {
+    let checksum: UInt32
+    let totalLotes: Int
+    let firmwareSize: Int
+}
+
+
+Path: Models/Service.swift
+
+//
+//  Service.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 15/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+struct Service {
+    var service: CBService
+    var characteristics: [Characteristic]
+}
+
+
+Path: Models/DiscoveredPeripheral.swift
+
+//
+//  DiscoveredPeripheral.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 9/2/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import CoreBluetooth
+
+class DiscoveredPeripheral: Identifiable, Hashable {
+    let id: String
+    var name: String
+    var rssi: Int
+    let peripheral: CBPeripheral
+    let isConnectable: Bool
+    var data: PeripheralData?
+    var services: [SimpleService] = []
+    var genericFileReadService: CBService?
+
+    init(
+        id: String,
+        name: String,
+        rssi: Int,
+        isConnectable: Bool,
+        peripheral: CBPeripheral,
+        data: PeripheralData? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.rssi = rssi
+        self.isConnectable = isConnectable
+        self.peripheral = peripheral
+        self.data = data
+    }
+
+    static func == (lhs: DiscoveredPeripheral, rhs: DiscoveredPeripheral) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+
+
+
+Path: Models/Item.swift
+
+//
+//  Item.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 8/2/24.
+//
+
+import Foundation
+import SwiftData
+
+@Model
+final class Item {
+    var timestamp: Date
+    
+    init(timestamp: Date) {
+        self.timestamp = timestamp
+    }
+}
+
+
+Path: Models/CBCharacteristicProperties.swift
+
+import CoreBluetooth
+
+extension CBCharacteristicProperties {
+    var propertiesDescription: String {
+        var descriptions: [String] = []
+        if contains(.broadcast) {
+            descriptions.append("Broadcast")
+        }
+        if contains(.read) {
+            descriptions.append("Read")
+        }
+        if contains(.writeWithoutResponse) {
+            descriptions.append("WriteWithoutResponse")
+        }
+        if contains(.write) {
+            descriptions.append("Write")
+        }
+        if contains(.notify) {
+            descriptions.append("Notify")
+        }
+        if contains(.indicate) {
+            descriptions.append("Indicate")
+        }
+        if contains(.authenticatedSignedWrites) {
+            descriptions.append("AuthenticatedSignedWrites")
+        }
+        if contains(.extendedProperties) {
+            descriptions.append("ExtendedProperties")
+        }
+        if contains(.notifyEncryptionRequired) {
+            descriptions.append("NotifyEncryptionRequired")
+        }
+        if contains(.indicateEncryptionRequired) {
+            descriptions.append("IndicateEncryptionRequired")
+        }
+        return descriptions.joined(separator: ", ")
+    }
+}
+
+
+Path: Models/PeripheralRow.swift
+
+//
+//  PeripheralRow.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 5/4/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import SwiftUI
+import CoreBluetooth
+
+struct PeripheralRow: View, Equatable {
+    static func == (lhs: PeripheralRow, rhs: PeripheralRow) -> Bool {
+        lhs.peripheral.id == rhs.peripheral.id && lhs.systemImage == rhs.systemImage
+    }
+
+    var peripheral: DiscoveredPeripheral
+    var systemImage: String
+
+    var body: some View {
+        HStack {
+            Text(peripheral.name.isEmpty ? "Unnamed Device" : peripheral.name)
+            Spacer()
+            Image(systemName: systemImage)
+            Text("\(peripheral.rssi)")
+        }
+    }
+}
+
+
+Path: Models/PeripheralData.swift
+
+//
+//  PeripheralData.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 9/2/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+struct PeripheralData {
+    var int: Int
+    var float: Float
+    var bool: Bool
+    var string: String
+
+    init(int: Int, float: Float, bool: Bool, string: String) {
+        self.int = int
+        self.float = float
+        self.bool = bool
+        self.string = string
+    }
+}
+
+
+Path: Models/SimpleCharacteristic.swift
+
+//
+//  SimpleCharacteristic.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 2/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import Foundation
+import CoreBluetooth
+
+struct SimpleCharacteristic: Identifiable, Hashable {
+    let id: String
+    let characteristic: CBCharacteristic
+    var descriptors: [CBDescriptor]? = nil
+    var latestValue: Data? 
+
+    init(characteristic: CBCharacteristic) {
+        self.id = characteristic.uuid.uuidString
+        self.characteristic = characteristic
+    }
+}
+
+
+Path: Models/ServiceNames.swift
+
+//
+//  ServiceNames.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 28/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+struct ServiceNames {
+    static let shared = ServiceNames()
+
+    let mapping: [CBUUID: String] = [
+        CBUUID(string: "1800"): "Generic Access",
+        CBUUID(string: "1801"): "Generic Attribute",
+        CBUUID(string: "1802"): "Immediate Alert",
+        CBUUID(string: "1803"): "Link Loss",
+        CBUUID(string: "1804"): "Tx Power",
+        CBUUID(string: "1805"): "Current Time Service",
+        CBUUID(string: "1806"): "Reference Time Update Service",
+        CBUUID(string: "1807"): "Next DST Change Service",
+        CBUUID(string: "1808"): "Glucose",
+        CBUUID(string: "1809"): "Health Thermometer",
+        CBUUID(string: "180A"): "Device Information",
+        CBUUID(string: "180D"): "Heart Rate",
+        CBUUID(string: "180E"): "Phone Alert Status Service",
+        CBUUID(string: "180F"): "Battery Service",
+        CBUUID(string: "1810"): "Blood Pressure",
+        CBUUID(string: "1811"): "Alert Notification Service",
+        CBUUID(string: "1812"): "Human Interface Device",
+        CBUUID(string: "1813"): "Scan Parameters",
+        CBUUID(string: "1814"): "Running Speed and Cadence",
+        CBUUID(string: "1815"): "Automation IO",
+        CBUUID(string: "1816"): "Cycling Speed and Cadence",
+        CBUUID(string: "1818"): "Cycling Power",
+        CBUUID(string: "1819"): "Location and Navigation",
+        CBUUID(string: "181A"): "Environmental Sensing",
+        CBUUID(string: "181B"): "Body Composition",
+        CBUUID(string: "181C"): "User Data",
+        CBUUID(string: "181D"): "Weight Scale",
+        CBUUID(string: "181E"): "Bond Management",
+        CBUUID(string: "181F"): "Continuous Glucose Monitoring",
+        CBUUID(string: "1820"): "Internet Protocol Support",
+        CBUUID(string: "1821"): "Indoor Positioning",
+        CBUUID(string: "1822"): "Pulse Oximeter",
+        CBUUID(string: "1823"): "HTTP Proxy",
+        CBUUID(string: "1824"): "Transport Discovery",
+        CBUUID(string: "1825"): "Object Transfer",
+        CBUUID(string: "1826"): "Fitness Machine",
+        CBUUID(string: "1827"): "Mesh Provisioning",
+        CBUUID(string: "1828"): "Mesh Proxy",
+        CBUUID(string: "1829"): "Reconnection Configuration",
+        CBUUID(string: "182A"): "Insulin Delivery",
+        CBUUID(string: "182B"): "Binary Sensor",
+        CBUUID(string: "182C"): "Emergency Configuration",
+        CBUUID(string: "182D"): "Physical Activity Monitor",
+        CBUUID(string: "182E"): "Audio Input Control",
+        CBUUID(string: "182F"): "Volume Control",
+        CBUUID(string: "183A"): "Volume Offset Control Service",
+        CBUUID(string: "183B"): "Coordinated Set Identification Service",
+        CBUUID(string: "183C"): "Device Time",
+        CBUUID(string: "183E"): "Media Control Service",
+        CBUUID(string: "183F"): "Generic Media Control Service",
+        CBUUID(string: "1840"): "Constant Tone Extension",
+        CBUUID(string: "1841"): "Telephone Bearer Service",
+        CBUUID(string: "1842"): "Generic Telephone Bearer Service",
+        CBUUID(string: "1843"): "Microphone Control",
+        CBUUID(string: "1844"): "Audio Stream Control Service",
+        CBUUID(string: "1845"): "Broadcast Audio Scan Service",
+        CBUUID(string: "1846"): "Published Audio Capabilities Service",
+        CBUUID(string: "1847"): "Basic Audio Announcement Service",
+        CBUUID(string: "1848"): "Broadcast Audio Announcement Service",
+        CBUUID(string: "1849"): "Common Audio Service",
+        CBUUID(string: "184A"): "Hearing Access Service",
+        CBUUID(string: "184B"): "Tamper Alert",
+        CBUUID(string: "184C"): "Key-based Access Control",
+        CBUUID(string: "184D"): "Sub-GHz",
+        CBUUID(string: "184E"): "DMM",
+        CBUUID(string: "184F"): "Universal Control",
+        CBUUID(string: "1850"): "Electric Vehicle Charging",
+        CBUUID(string: "1851"): "Lighting",
+        CBUUID(string: "1852"): "Time Sync",
+        CBUUID(string: "2A29"): "Factory",
+        CBUUID(string: "2A24"): "Model",
+        CBUUID(string: "fb1e4001-54ae-4a28-9f74-dfccb248601d"): "OTA FIRMWARE SERVICE",
+        CBUUID(string: "fb1e4002-54ae-4a28-9f74-dfccb248601d"): "RX CHARACTERISTIC",
+        CBUUID(string: "fb1e4003-54ae-4a28-9f74-dfccb248601d"): "TX CHARACTERISTIC",
+    ]
+    
+    func name(for uuid: CBUUID) -> String {
+        mapping[uuid] ?? "Unknown Service"
+    }
+}
+
+
+Path: Models/DataFormat.swift
+
+//
+//  DataFormat.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 19/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+enum DataFormat: String, CaseIterable, Identifiable {
+    case string = "ASCII"
+    case hex = "Hex"
+    case binary = "Binary"
+    case decimal = "Decimal"
+
+    var id: String { self.rawValue }
+}
+
+
+Path: Models/Characteristic.swift
+
+//
+//  Characteristic.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 15/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+struct Characteristic {
+    var characteristic: CBCharacteristic
+    var latestValue: Data?
+}
+
+
+Path: Models/NavigationItem.swift
+
+//
+//  NavigationItem.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 29/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+enum NavigationItem: Hashable {
+    case settings
+    case peripheral(id: String)
+    case service(String)
+    case characteristic(String)
+    case none
+}
+
+
+
+Path: BLEuniversalApp.swift
+
+//  BLEUniversalApp.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 8/2/24.
+//
+
+import SwiftUI
+import SwiftData
+
+@main
+struct BLEUniversalApp: App {
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Item.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
+    var body: some Scene {
+        WindowGroup {
+#if os(macOS)
+            ContentViewMacOS()
+                .environmentObject(BLEManager())
+#else
+            ContentViewIOS()
+                .environmentObject(BLEManager())
+#endif
+        }
+        .modelContainer(sharedModelContainer)
+    }
+}
+
+
+Path: Utilities/DocumentPicker.swift
+
+//
+//  DocumentPicker.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 18/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+#if os(iOS)
+import SwiftUI
+import UniformTypeIdentifiers
+
+struct DocumentPicker: UIViewControllerRepresentable {
+    @Binding var fileURL: URL?
+    @Binding var errorMessage: String?
+
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType("public.data")!], asCopy: true)
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UIDocumentPickerDelegate {
+        var parent: DocumentPicker
+
+        init(_ parent: DocumentPicker) {
+            self.parent = parent
+        }
+
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            guard let url = urls.first else {
+                parent.errorMessage = "Unable to access the selected file."
+                return
+            }
+            // Ensure that the URL is accessible outside the sandbox
+            _ = url.startAccessingSecurityScopedResource()
+            parent.fileURL = url
+        }
+
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            parent.errorMessage = "File selection was cancelled."
+        }
+    }
+}
+#endif
+
+
+Path: Utilities/BluetoothError.swift
+
+//
+//  BluetoothError.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 19/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import Foundation
+
+enum BluetoothError: Error {
+    case characteristicNotFound
+    case unableToReadCharacteristic
+    case unableToWriteCharacteristic
+    case unknownError
+    case peripheralDisconnected
+    case bluetoothPermissionDenied
+    case bluetoothPoweredOff
+    case invalidDataFormat
+    case localizedDescription
+}
+
+extension BluetoothError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .characteristicNotFound:
+            return NSLocalizedString("The requested characteristic was not found.", comment: "")
+        case .unableToReadCharacteristic:
+            return NSLocalizedString("Unable to read the characteristic.", comment: "")
+        case .unableToWriteCharacteristic:
+            return NSLocalizedString("Unable to write the characteristic.", comment: "")
+        case .unknownError:
+            return NSLocalizedString("An unknown error occurred.", comment: "")
+        case .peripheralDisconnected:
+            return NSLocalizedString("The Bluetooth peripheral got disconnected.", comment: "")
+        case .bluetoothPermissionDenied:
+            return NSLocalizedString("Bluetooth permission was denied.", comment: "")
+        case .bluetoothPoweredOff:
+            return NSLocalizedString("Bluetooth is powered off.", comment: "")
+        case .invalidDataFormat:
+            return NSLocalizedString("Invalid data format.", comment: "")
+        case .localizedDescription:
+            return NSLocalizedString("Value localizedDescription", comment: "")
+        }
+    }
+}
+
+
+Path: Utilities/Extensions.swift
+
+// Extensions.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 9/2/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+
+import Foundation
+import SwiftUI
+
+extension String {
+    // Convierte una cadena hexadecimal en Data
+    func hexToData() -> Data {
+        var data = Data()
+        var temp = ""
+        for (index, character) in self.enumerated() {
+            temp.append(character)
+            if index % 2 != 0 {
+                if let byte = UInt8(temp, radix: 16) {
+                    data.append(byte)
+                }
+                temp = ""
+            }
+        }
+        return data
+    }
+    
+    // Convierte una cadena binaria en Data
+    func binaryToData() -> Data {
+        var data = Data()
+        let binaryStrings = self.split(separator: " ")
+        for binaryString in binaryStrings {
+            if let byte = UInt8(binaryString, radix: 2) {
+                data.append(byte)
+            }
+        }
+        return data
+    }
+    
+    // Divide una cadena en partes de longitud específica
+    func chunked(by length: Int) -> [String] {
+        var startIndex = self.startIndex
+        var results = [String]()
+        
+        while startIndex < self.endIndex {
+            let endIndex = self.index(startIndex, offsetBy: length, limitedBy: self.endIndex) ?? self.endIndex
+            results.append(String(self[startIndex..<endIndex]))
+            startIndex = endIndex
+        }
+        
+        return results
+    }
+}
+
+extension Data {
+    // Convierte Data en una cadena hexadecimal
+    func toHex() -> String {
+        return self.map { String(format: "%02x", $0) }.joined()
+    }
+
+    // Convierte Data en una cadena binaria
+    func toBinary() -> String {
+        return self.map { String($0, radix: 2).padding(toLength: 8, withPad: "0", startingAt: 0) }.joined(separator: " ")
+    }
+
+    // Convierte Data en una cadena UTF-8
+    func toUtf8String() -> String {
+        return String(decoding: self, as: UTF8.self)
+    }
+}
+
+struct ActionButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(configuration.isPressed ? Color.blue.opacity(0.7) : Color.blue)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 2)
+            )
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+    }
+}
+
+
+Path: Utilities/handleUpdatedValue.swift
+
+// handleUpdatedValue.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 15/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+protocol CharacteristicUpdateDelegate: AnyObject {
+    func didUpdateValueForCharacteristic(_ data: Data?, characteristic: CBCharacteristic, peripheral: CBPeripheral, error: Error?)
+}
+
+func handleUpdatedValue(for characteristic: CBCharacteristic, error: Error?, in peripherals: inout [DiscoveredPeripheral], delegate: CharacteristicUpdateDelegate?, txCharacteristicUUID: String, otaManager: OTAManager?) {
+    if let error = error {
+        print("Error updating value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+        return
+    }
+
+    guard let value = characteristic.value else {
+        print("No data received for characteristic \(characteristic.uuid).")
+        return
+    }
+
+    if characteristic.uuid.uuidString.lowercased() == txCharacteristicUUID.lowercased() {
+        otaManager?.processReceivedData(value)
+    } else {
+        if let peripheral = characteristic.service?.peripheral,
+           let peripheralIndex = peripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }),
+           let serviceIndex = peripherals[peripheralIndex].services.firstIndex(where: { $0.service.uuid == characteristic.service?.uuid }),
+           let charIndex = peripherals[peripheralIndex].services[serviceIndex].characteristics.firstIndex(where: { $0.characteristic.uuid == characteristic.uuid }) {
+
+            peripherals[peripheralIndex].services[serviceIndex].characteristics[charIndex].latestValue = value
+
+            let valueString = value.toUtf8String()
+            let hexString = value.toHex()
+            print("Value for characteristic \(characteristic.uuid) is now: \(valueString) (Hex: \(hexString))")
+        } else {
+            print("Characteristic \(characteristic.uuid) not found in discovered peripherals.")
+        }
+
+        if let peripheral = characteristic.service?.peripheral {
+            DispatchQueue.main.async {
+                delegate?.didUpdateValueForCharacteristic(value, characteristic: characteristic, peripheral: peripheral, error: nil)
+            }
+        } else {
+            print("No peripheral associated with characteristic \(characteristic.uuid).")
+        }
+    }
+}
+
+
+Path: Delegates/BLEPeripheralDelegate.swift
+
+//
+//  BLEPeripheralDelegate.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 15/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+
+protocol BLEPeripheralDelegate: AnyObject {
+    func didUpdateBluetoothState(isOn: Bool)
+    func didDiscoverPeripheral(_ peripheral: DiscoveredPeripheral)
+    func didConnectPeripheral(_ peripheral: CBPeripheral)
+    func didDisconnectPeripheral(_ peripheral: CBPeripheral)
+    func didDiscoverServices(_ services: [CBService], for peripheral: CBPeripheral)
+    func didDiscoverCharacteristics(_ characteristics: [CBCharacteristic], for service: CBService, peripheral: CBPeripheral)
+    func didUpdateValueForCharacteristic(_ data: Data?, characteristic: CBCharacteristic, peripheral: CBPeripheral, error: Error?)
+    func didUpdateRSSI(_ RSSI: Int, for peripheral: CBPeripheral)
+}
+
+
+Path: Delegates/FileUploadDelegate.swift
+
+// FileUploadDelegate.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 15/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+
+class FileUploadDelegate: ObservableObject, OTAUpdateServiceDelegate {
+    @Published var errorMessage: String?
+    @Published var showCompletionAlert: Bool = false
+    var otaProgress: OTAProgress
+
+    init(otaProgress: OTAProgress) {
+        self.otaProgress = otaProgress
+    }
+
+    func otaUpdateProgress(_ progress: Float) {
+        DispatchQueue.main.async {
+            self.otaProgress.progress = Double(progress)
+            self.otaProgress.message = "Update Progress: \(String(format: "%.2f%%", self.otaProgress.progress))"
+            print("OTA Update Progress: \(self.otaProgress.progress)%")
+        }
+    }
+
+    func otaUpdateComplete() {
+        DispatchQueue.main.async {
+            self.otaProgress.message = "OTA Update Completed Successfully!"
+            print("OTA Update Completed Successfully")
+            self.showCompletionAlert = true
+        }
+    }
+
+    func otaUpdateFailed(error: String) {
+        DispatchQueue.main.async {
+            self.otaProgress.message = "OTA Update Failed: \(error)"
+            self.errorMessage = error // Asegurarse de actualizar el errorMessage
+            print("OTA Update Failed: \(error)")
+        }
+    }
+}
+
+
+Path: Delegates/OTAUpdateServiceDelegate.swift
+
+//
+//  OTAUpdateServiceDelegate.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 15/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+protocol OTAUpdateServiceDelegate: AnyObject {
+    func otaUpdateProgress(_ progress: Float)
+    func otaUpdateComplete()
+    func otaUpdateFailed(error: String)
+}
+
+
+Path: Delegates/BluetoothDelegate.swift
+
+//
+//  BluetoothDelegate.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 11/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import CoreBluetooth
+
+protocol BluetoothDelegate: AnyObject {
+    func didDiscoverPeripheral(_ peripheral: DiscoveredPeripheral)
+    func didUpdateConnectionState(isConnected: Bool)
+    func didDiscoverServices(_ services: [CBService], forPeripheral peripheral: CBPeripheral)
+    func didUpdateServiceWithCharacteristics(forPeripheral peripheral: CBPeripheral, service: CBService, characteristics: [CBCharacteristic])
+}
+
+
+Path: Delegates/OTAProgress.swift
+
+//
+//  OTAProgress.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 18/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import Combine
+
+class OTAProgress: ObservableObject {
+    @Published var progress: Double = 0.0
+    @Published var message: String = ""
+}
+
+
+Path: Views/DetailView.swift
+
+//
+//  DetailView.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 29/3/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import SwiftUI
+struct DetailView: View {
+    @EnvironmentObject var viewModel: BLEManager
+    
+    var body: some View {
+        VStack {
+            switch viewModel.selectedNavigationItem {
+            case .peripheral(let id):
+                PeripheralDetailView(peripheralId: id)
+            case .service(let id):
+                ServiceDetailView(serviceId: id)
+            case .characteristic(let id):
+                CharacteristicDetailView(characteristicId: id)
+            case .settings:
+                SettingsView()
+            case .none:
+                Text("Select an item from the list")
+            }
+        }
+    }
+}
+
+
+Path: Views/ServiceDetailView.swift
+
+//  ServiceDetailView.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 29/2/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.import SwiftUI
+
+import SwiftUI
+import CoreBluetooth
+
+struct ServiceDetailView: View {
+    @EnvironmentObject var viewModel: BLEManager
+    var serviceId: String
+    
+    private var service: SimpleService? {
+        getService(by: serviceId)
+    }
+    
+    var body: some View {
+        VStack {
+            if let service = service {
+                Text("Service UUID: \(service.service.uuid.uuidString)").font(.headline)
+                serviceListView(for: service)
+            } else {
+                Text("Service not found").font(.headline)
+            }
+        }
+        .padding()
+        .background(backgroundColor)
+        .navigationTitle("Service Detail")
+        .toolbar {
+            #if os(macOS)
+            ToolbarItem {
+                Button(action: {
+                    viewModel.pop()
+                }) {
+                    Label("Back", systemImage: "arrow.clockwise")
+                }
+            }
+            #endif
+        }
+    }
+    
+    @ViewBuilder
+    private func serviceListView(for service: SimpleService) -> some View {
+        List {
+            Section(header: Text("Characteristics")) {
+                ForEach(service.characteristics, id: \.id) { characteristic in
+                    if characteristic.characteristic.uuid == CBUUID(string: "fb1e4002-54ae-4a28-9f74-dfccb248601d") {
+                        NavigationLink(destination: FileUploadView()) {
+                            characteristicRow(for: characteristic)
+                        }
+                    } else {
+                        NavigationLink(destination: CharacteristicDetailView(characteristicId: characteristic.id)) {
+                            characteristicRow(for: characteristic)
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+        .background(backgroundColor)
+    }
+    
+    @ViewBuilder
+    private func characteristicRow(for characteristic: SimpleCharacteristic) -> some View {
+        VStack(alignment: .leading) {
+            let uuidName = viewModel.serviceName(for: characteristic.characteristic.uuid)
+            Text("Type: \(uuidName)")
+            Text("Properties: \(characteristic.characteristic.properties.propertiesDescription)")
+        }
+    }
+    
+    private func getService(by id: String) -> SimpleService? {
+        for peripheral in viewModel.discoveredPeripherals {
+            if let service = peripheral.services.first(where: { $0.id == id }) {
+                return service
+            }
+        }
+        return nil
+    }
+    
+    private var backgroundColor: Color {
+        #if os(iOS)
+        return Color(UIColor.systemBackground)
+        #elseif os(macOS)
+        return Color(NSColor.windowBackgroundColor)
+        #endif
+    }
+}
+
+#if DEBUG
+struct ServiceDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        ServiceDetailView(serviceId: "TestServiceID")
+            .environmentObject(BLEManager.shared)
+    }
+}
+#endif
+
+
+Path: Views/SettingsView.swift
+
+//
+//  SettingsView.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 25/2/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import SwiftUI
+
+struct SettingsView: View {
+    @Environment(\.presentationMode) var presentationMode
+
+    let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown"
+    let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown"
+    
+    var body: some View {
+        List {
+            Section(header: Text("Support")) {
+                Link("Send email to support contact", destination: URL(string: "mailto:support@pedromartinezweb.com")!)
+            }
+            
+            Section(header: Text("App Info")) {
+                Text("Version: \(appVersion)-\(buildNumber)")
+                Link("Web support", destination: URL(string: "https://pedromartinezweb.com")!)
+            }
+        }
+        .navigationTitle("Settings")
+    }
+}
+
+
+Path: Views/CharacteristicDetailView.swift
+
+import SwiftUI
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
+import Foundation
+import CoreBluetooth
+
+struct CharacteristicDetailView: View {
+    @EnvironmentObject var viewModel: BLEManager
+
+    @State private var baseValue: Data = Data()
+    @State private var value = ""
+    @State private var selectedFormat: DataFormat = .string
+    @State private var showMessage = false
+    @State private var alertMessage = "reading values..."
+    @State private var alertMessageColor = Color.green
+    @State private var offset: CGFloat = 0
+
+    var characteristicId: String
+
+    private var characteristic: SimpleCharacteristic? {
+        viewModel.findCharacteristic(by: CBUUID(string: characteristicId))
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                VStack {
+                    if let characteristic = characteristic {
+                        VStack(alignment: .leading) {
+                            Text("Characteristic UUID: \(characteristic.characteristic.uuid.uuidString)")
+                                .font(.headline)
+                                .padding()
+
+                            Picker("Format", selection: $selectedFormat) {
+                                ForEach(DataFormat.allCases, id: \.self) {
+                                    Text($0.rawValue).tag($0)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding()
+                            .onChange(of: selectedFormat) { newValue , oldValue in
+                                convertValueToSelectedFormat()
+                            }
+
+                            VStack {
+                                TextField("", text: $value)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray))
+                                    .foregroundColor(.primary)
+                                    .onChange(of: value) { newValue , oldValue in
+                                        updateBaseValue(newValue)
+                                    }
+                            }
+                            .background(Color.clear)
+
+                            if characteristic.characteristic.properties.contains(.read) {
+                                HStack {
+                                    Button("Read Value") {
+                                        readCharacteristic(characteristic)
+                                    }
+                                    .buttonStyle(ActionButtonStyle())
+
+                                    if canWrite {
+                                        Button("Write Value") {
+                                            writeCharacteristic(characteristic)
+                                        }
+                                        .buttonStyle(ActionButtonStyle())
+                                    }
+                                }
+                                .padding(.top)
+                            }
+                            
+                            HStack {
+                                Button("Copy") {
+                                    copyToClipboard(value)
+                                }
+                                .buttonStyle(ActionButtonStyle())
+
+                                Button("Paste") {
+                                    pasteFromClipboard()
+                                }
+                                .buttonStyle(ActionButtonStyle())
+                            }
+                            .padding(.top)
+                        }
+                        .padding()
+                        #if os(iOS)
+                        .background(Color(.secondarySystemBackground))
+                        #else
+                        .background(Color.gray.opacity(0.1))
+                        #endif
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                    } else {
+                        Text("Characteristic not found")
+                            .foregroundColor(.red)
+                    }
+                }
+                .padding()
+                #if os(iOS)
+                .background(Color(.systemBackground))
+                #else
+                .background(Color.gray.opacity(0.1))
+                #endif
+            }
+            #if os(iOS)
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { notification in
+                if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                    offset = keyboardFrame.height - geometry.safeAreaInsets.bottom
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                offset = 0
+            }
+            #endif
+            .padding(.bottom, offset)
+            .animation(.easeOut(duration: 0.16), value: offset)
+            .task {
+                readCharacteristicIfNeeded()
+            }
+        }
+        .navigationTitle("Characteristic Details")
+    }
+
+    private var canWrite: Bool {
+        characteristic?.characteristic.properties.contains(.write) ?? false ||
+        characteristic?.characteristic.properties.contains(.writeWithoutResponse) ?? false
+    }
+
+    private func readCharacteristicIfNeeded() {
+        guard let characteristic = characteristic, characteristic.characteristic.properties.contains(.read) else {
+            return
+        }
+        readCharacteristic(characteristic)
+    }
+
+    private func readCharacteristic(_ characteristic: SimpleCharacteristic) {
+        viewModel.readCharacteristic(characteristic) { result in
+            switch result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    self.baseValue = data
+                    self.updateValueAndFormat()
+                    print("Read value: \(self.value)")
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.value = "Error: \(error.localizedDescription)"
+                    print("Read error: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    private func writeCharacteristic(_ characteristic: SimpleCharacteristic) {
+        viewModel.writeCharacteristic(characteristic, data: baseValue) { result in
+            switch result {
+            case .success():
+                DispatchQueue.main.async {
+                    print("Wrote value: \(self.value)")
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.value = "Error: \(error.localizedDescription)"
+                    print("Write error: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    private func updateValueAndFormat() {
+        if let utf8String = String(data: baseValue, encoding: .utf8) {
+            self.value = utf8String
+            self.selectedFormat = .string
+        } else {
+            self.value = baseValue.toHex()
+            self.selectedFormat = .hex
+        }
+    }
+
+    private func convertValueToSelectedFormat() {
+        switch selectedFormat {
+        case .string:
+            value = String(data: baseValue, encoding: .utf8) ?? ""
+        case .hex:
+            value = baseValue.toHex()
+        case .binary:
+            value = baseValue.toBinary()
+        case .decimal:
+            value = baseValue.map { String($0) }.joined(separator: " ")
+        }
+    }
+
+    private func updateBaseValue(_ newValue: String) {
+        switch selectedFormat {
+        case .string:
+            baseValue = newValue.data(using: .utf8) ?? Data()
+        case .hex:
+            baseValue = newValue.hexToData()
+        case .binary:
+            baseValue = newValue.binaryToData()
+        case .decimal:
+            baseValue = Data(newValue.split(separator: " ").compactMap { UInt8($0) })
+        }
+        value = newValue
+    }
+
+    private func copyToClipboard(_ text: String) {
+        #if os(iOS)
+        UIPasteboard.general.string = text
+        #elseif os(macOS)
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        #endif
+    }
+
+    private func pasteFromClipboard() {
+        #if os(iOS)
+        if let string = UIPasteboard.general.string {
+            value = string
+            updateBaseValue(string)
+        }
+        #elseif os(macOS)
+        if let string = NSPasteboard.general.string(forType: .string) {
+            value = string
+            updateBaseValue(string)
+        }
+        #endif
+    }
+
+    private func updateCharacteristicValue() {
+        if let characteristic = characteristic, let latestValue = characteristic.latestValue {
+            self.baseValue = latestValue
+            convertValueToSelectedFormat()
+        }
+    }
+}
+
+
+Path: Views/PeripheralDetailView.swift
+
+import CoreBluetooth
+import SwiftUI
+
+struct PeripheralDetailView: View {
+    var peripheralId: String
+    @EnvironmentObject var viewModel: BLEManager
+    @State private var isNavigatingToServiceDetail = false
+    
+    private var peripheral: DiscoveredPeripheral? {
+        viewModel.findPeripheral(by: peripheralId)
+    }
+    
+    var body: some View {
+        VStack {
+            headerView
+            serviceListView
+        }
+        .padding()
+        .background(backgroundColor)
+        .navigationTitle("Device Details")
+        .onAppear {
+            loadPeripheralDetails()
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .automatic) {
+                refreshButton
+            }
+        }
+        .onChange(of: viewModel.discoveredPeripherals) { newValue, oldValue in
+            withAnimation {
+                self.updateView()
+            }
+        }
+    }
+    
+    private func loadPeripheralDetails() {
+        guard let peripheralToConnect = self.peripheral else { return }
+        if peripheralToConnect.services.isEmpty {
+            if peripheralToConnect.peripheral.state != .connected {
+                viewModel.connectToDevice(peripheralToConnect)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var headerView: some View {
+        if let peripheral = peripheral {
+            VStack(alignment: .center, spacing: 8) {
+                Text("\(peripheral.name)").font(.title)
+                Text("ID: \(peripheral.id)").font(.caption)
+                HStack {
+                    VStack(alignment: .center) {
+                        Text("Signal Strength: \(peripheral.rssi) dBm").font(.headline)
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.1)))
+                    .shadow(radius: 1)
+                    
+                    VStack(alignment: .center) {
+                        Text("Total Services: \(peripheral.services.count)").font(.headline)
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.1)))
+                    .shadow(radius: 1)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 15).fill(Color.gray.opacity(0.1)))
+        } else {
+            Text("Device not found").italic()
+        }
+    }
+    
+    @ViewBuilder
+    private var serviceListView: some View {
+        if let services = peripheral?.services, !services.isEmpty {
+            List {
+                Section(header: Text("Uncovered services")) {
+                    ForEach(services) { service in
+                        NavigationLink(destination: ServiceDetailView(serviceId: service.id)) {
+                            VStack(alignment: .leading) {
+                                Text("Service: \(viewModel.serviceName(for: service.service.uuid))").font(.headline)
+                                Text("Characteristics: \(service.characteristics.count)").font(.caption)
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(PlainListStyle())
+            .background(backgroundColor)
+        } else {
+            VStack {
+                ProgressView("Discovering services...").progressViewStyle(CircularProgressViewStyle())
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var backButton: some View {
+        Button(action: {
+            viewModel.pop()
+        }) {
+            Label("Back", systemImage: "arrow.backward")
+        }
+    }
+    
+    @ViewBuilder
+    private var refreshButton: some View {
+        Button(action: {
+            if let peripheral = self.peripheral {
+                viewModel.connectToDevice(peripheral)
+            }
+        }) {
+            Label("Refresh", systemImage: "arrow.clockwise")
+        }
+    }
+
+    private func updateView() {
+        if peripheral != nil {
+            self.loadPeripheralDetails()
+        }
+    }
+    
+    private var backgroundColor: Color {
+        #if os(iOS)
+        return Color(UIColor.systemBackground)
+        #elseif os(macOS)
+        return Color(NSColor.windowBackgroundColor)
+        #endif
+    }
+}
+
+#if DEBUG
+struct PeripheralDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        PeripheralDetailView(peripheralId: "TestPeripheralID")
+            .environmentObject(BLEManager.shared)
+    }
+}
+#endif
+
+
+Path: Views/OTAProgressView.swift
+
+// OTAProgressView.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 12/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+
+import SwiftUI
+
+struct OTAProgressView: View {
+    @ObservedObject var otaProgress: OTAProgress
+    @Binding var isPresented: Bool
+    @State private var showCompletionAlert: Bool = false
+
+    var otaManager: OTAManager
+
+    var body: some View {
+        VStack {
+            Text("OTA Firmware Update")
+                .font(.largeTitle)
+                .padding()
+
+            ProgressView(value: otaProgress.progress, total: 100.0)
+                .progressViewStyle(LinearProgressViewStyle())
+                .padding()
+
+            Text("\(Int(otaProgress.progress))%")
+                .font(.title2)
+                .padding()
+
+            Text(otaProgress.message)
+                .font(.body)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: 100)
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                .lineLimit(10)
+
+            Button("Cancel") {
+                otaManager.cancelUpdate()
+                isPresented = false
+            }
+            .padding()
+            .buttonStyle(ActionButtonStyle())
+        }
+        .padding()
+        .onChange(of: otaProgress.progress) { progress, old in
+            if progress >= 100 {
+                showCompletionAlert = true
+            }
+        }
+        .alert(isPresented: $showCompletionAlert) {
+            Alert(
+                title: Text("OTA Update Completed"),
+                message: Text("OTA Update Completed Successfully!"),
+                dismissButton: .default(Text("Restart App")) {
+                    self.isPresented = false
+//                    otaManager.bleManager.resetApp()
+                }
+            )
+        }
+    }
+}
+
+
+Path: Views/SuccessView.swift
+
+//
+//  SuccessView.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 17/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import SwiftUI
+
+struct SuccessView: View {
+    @State private var timeRemaining: Int = 10
+    @Environment(\.presentationMode) var presentationMode
+
+    var body: some View {
+        VStack {
+            Text("OTA Update Completed Successfully!")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+                .padding()
+
+            Text("Returning to the main screen in \(timeRemaining) seconds.")
+                .font(.headline)
+                .foregroundColor(.gray)
+                .padding()
+
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Spacer()
+                    Text("Accept")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding()
+                .background(Color.blue)
+                .cornerRadius(10)
+            }
+            .padding(.top, 20)
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(15)
+        .shadow(radius: 10)
+        .onAppear {
+            startCountdown()
+        }
+    }
+
+    private func startCountdown() {
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if timeRemaining > 0 {
+                timeRemaining -= 1
+            } else {
+                timer.invalidate()
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
+    }
+}
+
+
+#if DEBUG
+struct SuccessView_Previews: PreviewProvider {
+    static var previews: some View {
+        SuccessView().environmentObject(BLEManager.shared)
+    }
+}
+#endif
+
+
+Path: Views/ContentViewIOS.swift
+
+//
+//  ContentViewIOS.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 5/4/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+#if os(iOS)
+import SwiftUI
+
+struct ContentViewIOS: View {
+    @EnvironmentObject var viewModel: BLEManager
+    @State private var selectedPeripheralID: String?
+    @State private var showingSettings: Bool = false
+    @Environment(\.horizontalSizeClass) var sizeClass
+    
+    private var connectablesWithName: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { $0.isConnectable && !$0.name.isEmpty && $0.name != "Unknown" }.sorted(by: { $0.rssi > $1.rssi })
+    }
+    
+    private var connectablesWithoutName: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { $0.isConnectable && ($0.name.isEmpty || $0.name == "Unknown") }.sorted(by: { $0.rssi > $1.rssi })
+    }
+    
+    private var nonConnectables: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { !$0.isConnectable }.sorted(by: { $0.rssi > $1.rssi })
+    }
+    
+    var body: some View {
+        Group {
+            if sizeClass == .compact {
+                iPhoneView
+            } else {
+                iPadView
+            }
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+        }
+    }
+    
+    private var iPhoneView: some View {
+        NavigationView {
+            NavigationStack {
+                listSection
+                    .navigationTitle("Devices")
+                    .toolbar {
+                        ToolbarItemGroup(placement: .automatic) {
+                            settingsButton
+                            scanButton
+                        }
+                    }
+            }
+        }
+    }
+    
+    private var iPadView: some View {
+        NavigationSplitView {
+            listSection
+        } detail: {
+            detailView
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .automatic) {
+                settingsButton
+                scanButton
+            }
+        }
+    }
+    
+    private var listSection: some View {
+        NavigationStack {
+            List {
+                sectionView(for: connectablesWithName, title: "Connectables With Name", systemImage: "wifi")
+                sectionView(for: connectablesWithoutName, title: "Connectables Without Name", systemImage: "wifi.exclamationmark")
+                sectionView(for: nonConnectables, title: "Non-Connectables", systemImage: "wifi.slash")
+            }
+            .navigationTitle("Devices")
+            .navigationDestination(for: String.self) { id in
+                PeripheralDetailView(peripheralId: id)
+            }
+        }
+    }
+    
+    private func sectionView(for peripherals: [DiscoveredPeripheral], title: String, systemImage: String) -> some View {
+        Section(header: Text(title)) {
+            ForEach(peripherals) { peripheral in
+                NavigationLink(value: peripheral.id) {
+                    PeripheralRow(peripheral: peripheral, systemImage: systemImage)
+                }
+                .tag(peripheral.id)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var detailView: some View {
+        if let id = selectedPeripheralID, viewModel.findPeripheral(by: id) != nil {
+            PeripheralDetailView(peripheralId: id)
+        } else {
+            Text("Please select an item from the list").foregroundColor(.secondary)
+        }
+    }
+    
+    private var settingsButton: some View {
+        Button(action: {
+            showingSettings = true
+        }) {
+            Label("Settings", systemImage: "gear")
+                .labelStyle(IconOnlyLabelStyle())
+        }
+    }
+    
+    private var scanButton: some View {
+        Button(action: toggleScanning) {
+            Label(viewModel.isScanning ? "Pause" : "Start", systemImage: viewModel.isScanning ? "pause.fill" : "play.fill")
+        }
+    }
+    
+    private func toggleScanning() {
+        if viewModel.isScanning {
+            viewModel.stopScanning()
+        } else {
+            viewModel.startScanning()
+        }
+    }
+    
+    private func updateSelectionIfNeeded() {
+        guard !viewModel.discoveredPeripherals.isEmpty else { return }
+        
+        let firstConnectable = viewModel.discoveredPeripherals.first { $0.isConnectable }
+        if selectedPeripheralID == nil, let firstConnectable = firstConnectable {
+            selectedPeripheralID = firstConnectable.id
+        }
+    }
+}
+
+struct ContentViewIOS_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentViewIOS().environmentObject(BLEManager())
+    }
+}
+#endif
+
+
+Path: Views/ContentViewMac.swift
+
+//
+//  ContentViewMac.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 5/4/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+#if os(macOS)
+import SwiftUI
+
+struct ContentViewMacOS: View {
+    @EnvironmentObject var viewModel: BLEManager
+    @State private var selectedNavigationItem: NavigationItem?
+
+    private var connectablesWithName: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { $0.isConnectable && !$0.name.isEmpty && $0.name != "Unknown" }
+            .sorted { $0.rssi > $1.rssi }
+    }
+
+    private var connectablesWithoutName: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { $0.isConnectable && ($0.name.isEmpty || $0.name == "Unknown") }
+            .sorted { $0.rssi > $1.rssi }
+    }
+
+    private var nonConnectables: [DiscoveredPeripheral] {
+        viewModel.discoveredPeripherals.filter { !$0.isConnectable }
+            .sorted { $0.rssi > $1.rssi }
+    }
+
+    var body: some View {
+        NavigationStack(path: $viewModel.navigationPath) {
+            NavigationSplitView {
+                listSection
+                .toolbar {
+                    ToolbarItemGroup(placement: .automatic) {
+                        settingsButton
+                        scanButton
+                    }
+                }
+            } detail: {
+                detailView
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    viewModel.startScanning()
+                }
+            }
+        }
+    }
+
+    private var listSection: some View {
+        List(selection: $selectedNavigationItem) {
+            sectionView(for: connectablesWithName, title: "Connectables With Name", systemImage: "wifi")
+            sectionView(for: connectablesWithoutName, title: "Connectables Without Name", systemImage: "wifi.exclamationmark")
+            sectionView(for: nonConnectables, title: "Non-Connectables", systemImage: "wifi.slash")
+        }
+        .listStyle(SidebarListStyle())
+    }
+
+    private func sectionView(for peripherals: [DiscoveredPeripheral], title: String, systemImage: String) -> some View {
+        Section(header: Text(title)) {
+            ForEach(peripherals) { peripheral in
+                NavigationLink(value: NavigationItem.peripheral(id: peripheral.id)) {
+                    PeripheralRow(peripheral: peripheral, systemImage: systemImage)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var detailView: some View {
+        switch selectedNavigationItem {
+        case .peripheral(let id):
+            PeripheralDetailView(peripheralId: id)
+        case .settings:
+            SettingsView()
+        case nil:
+            Text("Select a device or go to settings").foregroundColor(.secondary)
+        default:
+            Text("Detail not available").foregroundColor(.secondary)
+        }
+    }
+
+    private var settingsButton: some View {
+        Button(action: {
+            selectedNavigationItem = .settings
+        }) {
+            Label("Settings", systemImage: "gear")
+                .labelStyle(IconOnlyLabelStyle())
+        }
+    }
+
+    private var scanButton: some View {
+        Button(action: toggleScanning) {
+            Label(viewModel.isScanning ? "Pause" : "Start", systemImage: viewModel.isScanning ? "pause.fill" : "play.fill")
+        }
+    }
+
+    private func toggleScanning() {
+        if viewModel.isScanning {
+            viewModel.stopScanning()
+        } else {
+            viewModel.startScanning()
+        }
+    }
+}
+
+struct ContentViewMacOS_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentViewMacOS().environmentObject(BLEManager.shared)
+    }
+}
+#endif
+
+
+Path: Views/FileUploadView.swift
+
+// FileUploadView.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 18/4/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+
+import SwiftUI
+import UniformTypeIdentifiers
+import CoreBluetooth
+
+let UART_RX_CHAR_UUID = CBUUID(string: "fb1e4002-54ae-4a28-9f74-dfccb248601d")
+let UART_TX_CHAR_UUID = CBUUID(string: "fb1e4003-54ae-4a28-9f74-dfccb248601d")
+
+struct FileUploadView: View {
+    @EnvironmentObject var bleManager: BLEManager
+    @Environment(\.presentationMode) var presentationMode
+    @State private var fileURL: URL?
+    @State private var errorMessage: String?
+    @State private var isPresentingDocumentPicker: Bool = false
+    @StateObject private var otaProgress = OTAProgress()
+    @State private var showOTAProgressView: Bool = false
+    @State private var otaManager: OTAManager?
+    @StateObject private var uploadDelegate: FileUploadDelegate
+    @State private var showRestartAlert: Bool = false
+
+    init() {
+        let otaProgress = OTAProgress()
+        _uploadDelegate = StateObject(wrappedValue: FileUploadDelegate(otaProgress: otaProgress))
+        _otaProgress = StateObject(wrappedValue: otaProgress)
+    }
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Select the firmware file (.bin) to send OTA update.")
+                .padding()
+                .multilineTextAlignment(.center)
+
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+
+            Button("Select File") {
+                selectFile()
+            }
+            .padding()
+            .buttonStyle(ActionButtonStyle())
+
+            if let fileURL = fileURL {
+                HStack {
+                    Text("Selected file: \(fileURL.lastPathComponent)")
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(8)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+
+                    Button(action: {
+                        self.fileURL = nil
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.red)
+                    }
+                }
+                Button("Send OTA Update") {
+                    checkServicesAndSendOTAUpdate(fileURL)
+                }
+                .padding()
+                .buttonStyle(ActionButtonStyle())
+            }
+        }
+        .sheet(isPresented: $isPresentingDocumentPicker) {
+            #if os(iOS)
+            DocumentPicker(fileURL: $fileURL, errorMessage: $errorMessage)
+            #endif
+        }
+        .sheet(isPresented: $showOTAProgressView) { // Usar .sheet en lugar de .fullScreenCover
+            if let otaManager = otaManager {
+                OTAProgressView(
+                    otaProgress: otaProgress,
+                    isPresented: $showOTAProgressView,
+                    otaManager: otaManager
+                )
+            } else {
+                Text("Error: OTA Manager no está inicializado.")
+            }
+        }
+        .alert(isPresented: $showRestartAlert) {
+            Alert(
+                title: Text("Device Restarting"),
+                message: Text("Your device is restarting. Please wait a few seconds."),
+                dismissButton: .default(Text("Accept")) {
+                    restartApp()
+                }
+            )
+        }
+        .onChange(of: uploadDelegate.errorMessage) { error, oldv in
+            if let error = error {
+                self.errorMessage = error
+            }
+        }
+        .onChange(of: otaProgress.message) { message, oldv in
+            print(message)
+            if message == "OTA Update Completed Successfully!" {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    self.showRestartAlert = true
+                }
+            }
+        }
+        .onChange(of: otaProgress.progress) { progress, oldv in
+            print("Progress updated in view: \(progress)%")
+        }
+    }
+
+    private func selectFile() {
+        #if os(iOS)
+        isPresentingDocumentPicker = true
+        #elseif os(macOS)
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [UTType(filenameExtension: "bin")!]
+
+        if panel.runModal() == .OK {
+            self.fileURL = panel.urls.first
+        } else {
+            self.errorMessage = "File selection was cancelled."
+        }
+        #endif
+    }
+
+    private func checkServicesAndSendOTAUpdate(_ url: URL) {
+        guard let peripheral = bleManager.connectedPeripheral else {
+            errorMessage = "No connected peripheral."
+            return
+        }
+
+        if peripheral.isDiscoveringServices {
+            peripheral.pauseServiceDiscovery()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.sendOTAUpdate(url)
+            }
+        } else {
+            sendOTAUpdate(url)
+        }
+    }
+
+    private func sendOTAUpdate(_ url: URL) {
+        do {
+            let firmwareData = try Data(contentsOf: url)
+            otaProgress.progress = 0.0
+            otaProgress.message = "Starting OTA Update..."
+
+            guard let peripheral = bleManager.connectedPeripheral else {
+                errorMessage = "No connected peripheral."
+                return
+            }
+
+            guard let rxCharacteristic = bleManager.findCharacteristic(by: UART_RX_CHAR_UUID),
+                  let txCharacteristic = bleManager.findCharacteristic(by: UART_TX_CHAR_UUID) else {
+                errorMessage = "RX or TX Characteristic not found."
+                return
+            }
+
+            let otaManager = OTAManager(
+                peripheral: peripheral,
+                rxCharacteristic: rxCharacteristic.characteristic,
+                txCharacteristic: txCharacteristic.characteristic,
+                firmwareData: firmwareData,
+                delegate: uploadDelegate,
+                bleManager: bleManager
+            )
+
+            bleManager.otaManager = otaManager
+            self.otaManager = otaManager
+            peripheral.setNotifyValue(true, for: txCharacteristic.characteristic)
+            otaManager.startUpdate()
+            showOTAProgressView = true
+        } catch {
+            errorMessage = "Failed to read firmware data: \(error.localizedDescription)"
+        }
+    }
+
+    private func restartApp() {
+        presentationMode.wrappedValue.dismiss()
+        bleManager.discoveredPeripherals.removeAll()
+        bleManager.startScanning()
+    }
+}
+
+
+Path: Info.plist
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSUbiquitousContainers</key>
+	<string>acceso a archivos de icloud</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>NSUbiquityIdentityToken</key>
+	<string>permisos para verificar si el usuario tiene cuanta de icloud</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>this app need accest to bluetooth to use this app</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Need to uplad OTA binary to ESP32</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>Needs access to select files for processing and uploading OTA file.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>ColorAzul</string>
+		<key>UIImageName</key>
+		<string>Icono</string>
+	</dict>
+</dict>
+</plist>
+
+
+Path: Services/BLEManager.swift
+
+// BLEManager.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 15/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import Foundation
+import CoreBluetooth
+import Combine
+import SwiftUI
+
+class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    static let shared = BLEManager()
+    
+    @Published var navigationStack: [NavigationItem] = []
+    @Published var selectedNavigationItem: NavigationItem = .none
+    
+    private var centralManager: CBCentralManager!
+    @Published var discoveredPeripherals: [DiscoveredPeripheral] = []
+    @Published var connectedPeripheral: CBPeripheral?
+    @Published var isConnected = false
+    @Published var isScanning = false
+    @Published var errorMessage: String? = nil
+    @Published var navigationPath = NavigationPath()
+    
+    weak var delegate: BLEPeripheralDelegate?
+    
+    var otaManager: OTAManager?
+    var discoveredPeripheralsPublisher = PassthroughSubject<DiscoveredPeripheral, Never>()
+    
+    private var characteristicReadCompletions: [CBUUID: (Result<Data, Error>) -> Void] = [:]
+    private var characteristicWriteCompletions: [CBUUID: (Result<Void, Error>) -> Void] = [:]
+    
+    override init() {
+        super.init()
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+    }
+    
+    func push(_ item: NavigationItem) {
+        DispatchQueue.main.async {
+            self.navigationStack.append(item)
+            self.selectedNavigationItem = item
+        }
+    }
+    
+    func pop() {
+        DispatchQueue.main.async {
+            if !self.navigationStack.isEmpty {
+                self.navigationStack.removeLast()
+            }
+            self.selectedNavigationItem = self.navigationStack.last ?? .none
+        }
+    }
+    
+    func startScanning() {
+        guard centralManager.state == .poweredOn else {
+            print("Bluetooth is not powered on")
+            return
+        }
+        isScanning = true
+        centralManager.scanForPeripherals(withServices: nil, options: nil)
+        print("Starting scan for peripherals.")
+    }
+    
+    func stopScanning() {
+        isScanning = false
+        centralManager.stopScan()
+        print("Scanning stopped.")
+    }
+    
+    func navigateToMainView() {
+        DispatchQueue.main.async {
+            self.navigationStack = []
+            self.selectedNavigationItem = .none
+        }
+    }
+
+    func disconnectCurrentDevice() {
+        if let connectedPeripheral = connectedPeripheral {
+            centralManager.cancelPeripheralConnection(connectedPeripheral)
+        }
+    }
+    
+    func connectToDevice(_ peripheral: DiscoveredPeripheral) {
+        guard let foundPeripheral = discoveredPeripherals.first(where: { $0.id == peripheral.id })?.peripheral else {
+            print("Peripheral not found in discovered list.")
+            return
+        }
+        print("Connecting to device: \(foundPeripheral.name ?? "unknown")")
+        centralManager.connect(foundPeripheral, options: nil)
+        connectedPeripheral = foundPeripheral
+    }
+    
+    func disconnectDevice(_ peripheral: DiscoveredPeripheral) {
+        guard let foundPeripheral = discoveredPeripherals.first(where: { $0.id == peripheral.id })?.peripheral else {
+            print("Device not found in discovered list.")
+            return
+        }
+        print("Disconnecting device: \(foundPeripheral.name ?? "unknown")")
+        centralManager.cancelPeripheralConnection(foundPeripheral)
+        if connectedPeripheral == foundPeripheral {
+            connectedPeripheral = nil
+            isConnected = false
+        }
+    }
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+        case .poweredOn:
+            print("Bluetooth is powered on and ready.")
+            delegate?.didUpdateBluetoothState(isOn: true)
+            startScanning()
+        case .poweredOff:
+            print("Bluetooth is powered off.")
+            delegate?.didUpdateBluetoothState(isOn: false)
+            errorMessage = "Bluetooth is powered off. Please enable it to use this app."
+            stopScanning()
+        default:
+            print("Bluetooth state is \(central.state.rawValue)")
+            delegate?.didUpdateBluetoothState(isOn: false)
+            errorMessage = "Bluetooth is not available."
+            stopScanning()
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        let discoveredPeripheral = DiscoveredPeripheral(
+            id: peripheral.identifier.uuidString,
+            name: peripheral.name ?? "Unknown",
+            rssi: RSSI.intValue,
+            isConnectable: advertisementData[CBAdvertisementDataIsConnectable] as? Bool ?? false,
+            peripheral: peripheral
+        )
+        if !discoveredPeripherals.contains(where: { $0.id == discoveredPeripheral.id }) {
+            discoveredPeripherals.append(discoveredPeripheral)
+            discoveredPeripheralsPublisher.send(discoveredPeripheral)
+            delegate?.didDiscoverPeripheral(discoveredPeripheral)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("Connected to \(peripheral.name ?? "unknown")")
+        isConnected = true
+        connectedPeripheral = peripheral
+        
+        if let otaManager = otaManager {
+            peripheral.delegate = otaManager
+            peripheral.discoverServices(nil)  // Descubrir servicios después de conectar
+        } else {
+            peripheral.delegate = self
+            peripheral.discoverServices(nil)
+        }
+        
+        delegate?.didConnectPeripheral(peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print("Failed to connect to \(peripheral.name ?? "unknown")")
+        errorMessage = "Failed to connect to \(peripheral.name ?? "unknown"): \(error?.localizedDescription ?? "Unknown error")"
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected from \(peripheral.name ?? "unknown")")
+        if peripheral == connectedPeripheral {
+            isConnected = false
+            connectedPeripheral = nil
+        }
+        delegate?.didDisconnectPeripheral(peripheral)
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else {
+            print("Error discovering services: \(String(describing: error))")
+            return
+        }
+        
+        if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+            discoveredPeripherals[index].services = services.map { SimpleService(service: $0) }
+        }
+        
+        for service in services {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+        print("Discovered \(services.count) services for \(peripheral.name ?? "unknown")")
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        if let error = error {
+            print("Error discovering characteristics: \(error)")
+            return
+        }
+        
+        guard let characteristics = service.characteristics else {
+            print("No characteristics found for \(service.uuid)")
+            return
+        }
+        
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.notify) {
+                print("Subscribing to notifications for \(characteristic.uuid)")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+            
+            if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }),
+               let serviceIndex = discoveredPeripherals[index].services.firstIndex(where: { $0.service.uuid == service.uuid }) {
+                discoveredPeripherals[index].services[serviceIndex].characteristics.append(SimpleCharacteristic(characteristic: characteristic))
+            }
+        }
+        
+        print("Discovered \(characteristics.count) characteristics for service \(service.uuid) on \(peripheral.name ?? "unknown")")
+        DispatchQueue.main.async {
+            self.delegate?.didDiscoverCharacteristics(characteristics, for: service, peripheral: peripheral)
+        }
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error updating value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+            characteristicReadCompletions[characteristic.uuid]?(.failure(error))
+            characteristicReadCompletions.removeValue(forKey: characteristic.uuid)
+            return
+        }
+
+        guard let value = characteristic.value else {
+            print("No data received for characteristic \(characteristic.uuid).")
+            let error = BluetoothError.unableToReadCharacteristic
+            characteristicReadCompletions[characteristic.uuid]?(.failure(error))
+            characteristicReadCompletions.removeValue(forKey: characteristic.uuid)
+            return
+        }
+
+        characteristicReadCompletions[characteristic.uuid]?(.success(value))
+        characteristicReadCompletions.removeValue(forKey: characteristic.uuid)
+
+        if let peripheralIndex = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }),
+           let serviceIndex = discoveredPeripherals[peripheralIndex].services.firstIndex(where: { $0.service.uuid == characteristic.service?.uuid }),
+           let charIndex = discoveredPeripherals[peripheralIndex].services[serviceIndex].characteristics.firstIndex(where: { $0.characteristic.uuid == characteristic.uuid }) {
+            
+            discoveredPeripherals[peripheralIndex].services[serviceIndex].characteristics[charIndex].latestValue = value
+            
+            if let valueString = String(data: value, encoding: .utf8) {
+                print("Value for characteristic \(characteristic.uuid) is now: \(valueString)")
+            } else {
+                let hexString = value.map { String(format: "%02hhx", $0) }.joined()
+                print("Value for characteristic \(characteristic.uuid) in hex: \(hexString)")
+            }
+        } else {
+            print("Characteristic \(characteristic.uuid) not found in discovered peripherals.")
+        }
+
+        delegate?.didUpdateValueForCharacteristic(value, characteristic: characteristic, peripheral: peripheral, error: nil)
+
+        if characteristic.uuid.uuidString.lowercased() == otaManager?.txCharacteristic.uuid.uuidString.lowercased() {
+            otaManager?.processReceivedData(value)
+        }
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error writing value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+            characteristicWriteCompletions[characteristic.uuid]?(.failure(error))
+            characteristicWriteCompletions.removeValue(forKey: characteristic.uuid)
+            return
+        }
+        
+        characteristicWriteCompletions[characteristic.uuid]?(.success(()))
+        characteristicWriteCompletions.removeValue(forKey: characteristic.uuid)
+    }
+
+    func readRSSI(for peripheral: CBPeripheral) {
+        peripheral.readRSSI()
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+        if let error = error {
+            print("Error reading RSSI: \(error.localizedDescription)")
+            return
+        }
+        print("Read RSSI \(RSSI) for \(peripheral.name ?? "unknown")")
+        if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+            discoveredPeripherals[index].rssi = RSSI.intValue
+            delegate?.didUpdateRSSI(RSSI.intValue, for: peripheral)
+        }
+    }
+    
+    // Utility function to find peripheral by ID
+    func findPeripheral(by id: String) -> DiscoveredPeripheral? {
+        return discoveredPeripherals.first { $0.id == id }
+    }
+    
+    // Utility function to find a characteristic in any discovered peripheral
+    func findCharacteristic(by uuid: CBUUID) -> SimpleCharacteristic? {
+        for discoveredPeripheral in discoveredPeripherals {
+            for service in discoveredPeripheral.services {
+                if let characteristic = service.characteristics.first(where: { $0.characteristic.uuid == uuid }) {
+                    return characteristic
+                }
+            }
+        }
+        return nil
+    }
+    
+    // Utility function to return the service name by UUID
+    func serviceName(for uuid: CBUUID) -> String {
+        return ServiceNames.shared.name(for: uuid)
+    }
+    
+    func readCharacteristic(_ characteristic: SimpleCharacteristic, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let peripheral = connectedPeripheral else {
+            completion(.failure(BluetoothError.peripheralDisconnected))
+            return
+        }
+        
+        guard characteristic.characteristic.properties.contains(.read) else {
+            completion(.failure(BluetoothError.unableToReadCharacteristic))
+            return
+        }
+        
+        characteristicReadCompletions[characteristic.characteristic.uuid] = completion
+        peripheral.readValue(for: characteristic.characteristic)
+    }
+
+    func writeCharacteristic(_ characteristic: SimpleCharacteristic, data: Data, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let peripheral = connectedPeripheral else {
+            completion(.failure(BluetoothError.peripheralDisconnected))
+            return
+        }
+        
+        guard characteristic.characteristic.properties.contains(.write) || characteristic.characteristic.properties.contains(.writeWithoutResponse) else {
+            completion(.failure(BluetoothError.unableToWriteCharacteristic))
+            return
+        }
+        
+        let type: CBCharacteristicWriteType = characteristic.characteristic.properties.contains(.write) ? .withResponse : .withoutResponse
+        characteristicWriteCompletions[characteristic.characteristic.uuid] = completion
+        peripheral.writeValue(data, for: characteristic.characteristic, type: type)
+    }
+}
+
+
+extension CBPeripheral {
+    var isDiscoveringServices: Bool {
+        return services?.isEmpty ?? true
+    }
+    
+    func pauseServiceDiscovery() {
+        // Implementar lógica para pausar la detección de servicios si es necesario
+        print("Service discovery paused")
+    }
+    
+    func resumeServiceDiscovery() {
+        // Implementar lógica para reanudar la detección de servicios si es necesario
+        print("Service discovery resumed")
+    }
+}
+
+
+Path: Services/OTAUpdateService.swift
+
+// OTAUpdateService.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 1/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+
+import Foundation
+import CoreBluetooth
+
+
+class OTAUpdateService {
+    private unowned var peripheral: CBPeripheral
+    private var rxCharacteristic: CBCharacteristic?
+    private var txCharacteristic: CBCharacteristic?
+
+    var otaManager: OTAManager?
+
+    weak var delegate: OTAUpdateServiceDelegate?
+
+    var txCharacteristicUUID = "fb1e4003-54ae-4a28-9f74-dfccb248601d"
+    var rxCharacteristicUUID = "fb1e4002-54ae-4a28-9f74-dfccb248601d"
+
+    init(peripheral: CBPeripheral, rxCharacteristic: CBCharacteristic?, txCharacteristic: CBCharacteristic?, firmwareData: Data, delegate: OTAUpdateServiceDelegate?) {
+        self.peripheral = peripheral
+        self.rxCharacteristic = rxCharacteristic
+        self.txCharacteristic = txCharacteristic
+        self.delegate = delegate
+
+        if let rxCharacteristic = rxCharacteristic {
+            self.otaManager = OTAManager(peripheral: peripheral, rxCharacteristic: rxCharacteristic, firmwareData: firmwareData, delegate: delegate)
+        }
+    }
+
+    func startUpdate() {
+        guard let otaManager = otaManager else {
+            print("OTA Manager not initialized")
+            delegate?.otaUpdateDidFail(error: "OTA Manager not initialized")
+            return
+        }
+
+        guard let txCharacteristic = txCharacteristic else {
+            print("TX Characteristic not found")
+            delegate?.otaUpdateDidFail(error: "TX Characteristic not found")
+            return
+        }
+
+        peripheral.setNotifyValue(true, for: txCharacteristic)
+        otaManager.startUpdate()
+    }
+
+    func handleUpdatedValue(for characteristic: CBCharacteristic, error: Error?, in peripherals: inout [DiscoveredPeripheral], delegate: BLEPeripheralDelegate?) {
+        if let error = error {
+            print("Error updating value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+            return
+        }
+
+        guard let value = characteristic.value else {
+            print("No data received for characteristic \(characteristic.uuid).")
+            return
+        }
+
+        if characteristic.uuid.uuidString.lowercased() == txCharacteristicUUID.lowercased() {
+            otaManager?.processReceivedData(value)
+        }
+
+        // Actualizar la lista de periféricos descubiertos
+        if let peripheral = characteristic.service?.peripheral,
+           let peripheralIndex = peripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }),
+           let serviceIndex = peripherals[peripheralIndex].services.firstIndex(where: { $0.service.uuid == characteristic.service?.uuid }),
+           let charIndex = peripherals[peripheralIndex].services[serviceIndex].characteristics.firstIndex(where: { $0.characteristic.uuid == characteristic.uuid }) {
+
+            peripherals[peripheralIndex].services[serviceIndex].characteristics[charIndex].latestValue = value
+
+            if let valueString = String(data: value, encoding: .utf8) {
+                print("Value for characteristic \(characteristic.uuid) is now: \(valueString)")
+            } else {
+                let hexString = value.map { String(format: "%02hhx", $0) }.joined()
+                print("Value for characteristic \(characteristic.uuid) in hex: \(hexString)")
+            }
+        } else {
+            print("Characteristic \(characteristic.uuid) not found in discovered peripherals.")
+        }
+
+        // Notificar al delegado
+        if let peripheral = characteristic.service?.peripheral {
+            DispatchQueue.main.async {
+                delegate?.didUpdateValueForCharacteristic(value, characteristic: characteristic, peripheral: peripheral, error: nil)
+            }
+        } else {
+            print("No peripheral associated with characteristic \(characteristic.uuid).")
+        }
+    }
+}
+
+
+Path: Services/ServiceDiscoveryManager.swift
+
+//
+//  ServiceDiscoveryManager.swift
+//  BLEUniversal
+//
+//  Created by Pedro Martinez Acebron on 11/5/24.
+//  Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+
+import CoreBluetooth
+
+class ServiceDiscoveryManager: NSObject, CBPeripheralDelegate {
+    func discoverServices(for peripheral: CBPeripheral) {
+        peripheral.discoverServices(nil)
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else {
+            print("Error discovering services: \(String(describing: error))")
+            return
+        }
+//        print("Discovered services for \(peripheral.name ?? "a device").")
+        for service in services {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard error == nil else {
+            print("Error discovering characteristics: \(error!.localizedDescription)")
+            return
+        }
+        guard service.characteristics != nil else {
+            print("No characteristics found for service \(service.uuid)")
+            return
+        }
+        print("Discovered characteristics for service \(service.uuid).")
+    }
+}
+
+
+Path: Services/PeripheralManager.swift
+
+// PeripheralManager.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 11/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+
+import Foundation
+import CoreBluetooth
+import Combine
+
+class PeripheralManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+    static let shared = PeripheralManager()
+    
+    private var centralManager: CBCentralManager!
+    var discoveredPeripherals = [DiscoveredPeripheral]()
+    weak var delegate: BLEPeripheralDelegate?
+    var discoveredPeripheralsPublisher = PassthroughSubject<DiscoveredPeripheral, Never>()
+    var otaUpdateService: OTAUpdateService?
+    
+    @Published var connectedPeripheral: CBPeripheral?
+    @Published var isConnected = false
+    
+    override init() {
+        super.init()
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+    }
+    
+    func startScanning() {
+        guard centralManager.state == .poweredOn else {
+            print("Bluetooth is not powered on")
+            return
+        }
+        centralManager.scanForPeripherals(withServices: nil, options: nil)
+        print("Starting scan for peripherals.")
+    }
+    
+    func stopScanning() {
+        centralManager.stopScan()
+        print("Scanning stopped.")
+    }
+    
+    func connectToDevice(_ peripheral: CBPeripheral) {
+        if connectedPeripheral != peripheral {
+            print("Connecting to device: \(peripheral.name ?? "unknown")")
+            centralManager.connect(peripheral, options: nil)
+            connectedPeripheral = peripheral
+        }
+    }
+
+    func disconnectDevice(_ peripheral: CBPeripheral) {
+        print("Disconnecting device: \(peripheral.name ?? "unknown")")
+        centralManager.cancelPeripheralConnection(peripheral)
+        if connectedPeripheral == peripheral {
+            connectedPeripheral = nil
+            isConnected = false
+        }
+    }
+
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+        case .poweredOn:
+            print("Bluetooth is powered on and ready.")
+        case .poweredOff:
+            print("Bluetooth is powered off.")
+        case .resetting:
+            print("The Bluetooth connection is resetting.")
+        case .unauthorized:
+            print("Bluetooth usage is unauthorized.")
+        case .unsupported:
+            print("Bluetooth is not supported on this device.")
+        case .unknown:
+            print("Bluetooth state is unknown.")
+        @unknown default:
+            print("A new, unknown state of Bluetooth.")
+        }
+    }
+
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        let discoveredPeripheral = DiscoveredPeripheral(
+            id: peripheral.identifier.uuidString,
+            name: peripheral.name ?? "Unknown",
+            rssi: RSSI.intValue,
+            isConnectable: advertisementData[CBAdvertisementDataIsConnectable] as? Bool ?? false,
+            peripheral: peripheral
+        )
+        if !discoveredPeripherals.contains(where: { $0.id == discoveredPeripheral.id }) {
+            discoveredPeripherals.append(discoveredPeripheral)
+            discoveredPeripheralsPublisher.send(discoveredPeripheral)
+            delegate?.didDiscoverPeripheral(discoveredPeripheral)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("Connected to \(peripheral.name ?? "unknown")")
+        isConnected = true
+        connectedPeripheral = peripheral
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+        
+        delegate?.didConnectPeripheral(peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected from \(peripheral.name ?? "unknown")")
+        if peripheral == connectedPeripheral {
+            isConnected = false
+            connectedPeripheral = nil
+        }
+        delegate?.didDisconnectPeripheral(peripheral)
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else {
+            print("Error discovering services: \(String(describing: error))")
+            return
+        }
+
+        if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+            discoveredPeripherals[index].services = services.map { SimpleService(service: $0) }
+        }
+        
+        for service in services {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+        print("Discovered \(services.count) services for \(peripheral.name ?? "unknown")")
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        if let error = error {
+            print("Error discovering characteristics: \(error)")
+            return
+        }
+        
+        guard let characteristics = service.characteristics else {
+            print("No characteristics found for \(service.uuid)")
+            return
+        }
+        
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.notify) {
+                print("Subscribing to notifications for \(characteristic.uuid)")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+            
+            if let index = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }),
+               let serviceIndex = discoveredPeripherals[index].services.firstIndex(where: { $0.service.uuid == service.uuid }) {
+                discoveredPeripherals[index].services[serviceIndex].characteristics.append(SimpleCharacteristic(characteristic: characteristic))
+            }
+        }
+        
+        print("Discovered \(characteristics.count) characteristics for service \(service.uuid) on \(peripheral.name ?? "unknown")")
+        DispatchQueue.main.async {
+            self.delegate?.didDiscoverCharacteristics(characteristics, for: service, peripheral: peripheral)
+        }
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        handleUpdatedValue(
+            for: characteristic,
+            error: error,
+            in: &self.discoveredPeripherals,
+            delegate: self.delegate,
+            txCharacteristicUUID: self.otaUpdateService?.txCharacteristicUUID ?? "",
+            otaManager: self.otaUpdateService?.otaManager
+        )
+    }
+
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error changing notification state: \(error.localizedDescription)")
+            return
+        }
+        print("Notification state changed for \(characteristic.uuid)")
+    }
+}
+
+
+Path: Services/OTAManager.swift
+
+// OTAManager.swift
+// BLEUniversal
+//
+// Created by Pedro Martinez Acebron on 15/5/24.
+// Copyright © 2024 pedromartinezweb. All rights reserved.
+//
+import Foundation
+import CoreBluetooth
+
+class OTAManager: NSObject {
+    private var currentOffset = 0
+    private let chunkSize = 16000
+    private let mtu = 500
+    private var firmwareData: Data
+    private var rxCharacteristic: CBCharacteristic
+    var txCharacteristic: CBCharacteristic
+    private var peripheral: CBPeripheral
+    private weak var delegate: OTAUpdateServiceDelegate?
+    
+    private var totalChunks: Int = 0
+    private var chunksSent: Int = 0
+    private var isCancelled: Bool = false
+    var bleManager: BLEManager
+    
+    var txCharacteristicUUID: String {
+        return txCharacteristic.uuid.uuidString
+    }
+    
+    init(peripheral: CBPeripheral, rxCharacteristic: CBCharacteristic, txCharacteristic: CBCharacteristic, firmwareData: Data, delegate: OTAUpdateServiceDelegate?, bleManager: BLEManager) {
+        self.peripheral = peripheral
+        self.rxCharacteristic = rxCharacteristic
+        self.txCharacteristic = txCharacteristic
+        self.firmwareData = firmwareData
+        self.delegate = delegate
+        self.bleManager = bleManager
+        super.init()
+        self.peripheral.delegate = self
+        totalChunks = (firmwareData.count + chunkSize - 1) / chunkSize
+    }
+    
+    func startUpdate() {
+        isCancelled = false
+        sendOtaCommand(byte: 0xFD)
+        sendFileSize()
+        sendOtaInfo()
+    }
+    
+    func cancelUpdate() {
+        isCancelled = true
+    }
+    
+    private func sendOtaCommand(byte: UInt8) {
+        let data = Data([byte])
+        peripheral.writeValue(data, for: rxCharacteristic, type: .withResponse)
+    }
+    
+    private func sendFileSize() {
+        let fileSize = firmwareData.count
+        let data = Data([
+            0xFE,
+            UInt8((fileSize >> 24) & 0xFF),
+            UInt8((fileSize >> 16) & 0xFF),
+            UInt8((fileSize >> 8) & 0xFF),
+            UInt8(fileSize & 0xFF)
+        ])
+        peripheral.writeValue(data, for: rxCharacteristic, type: .withResponse)
+    }
+    
+    private func sendOtaInfo() {
+        let totalParts = totalChunks
+        let data = Data([
+            0xFF,
+            UInt8((totalParts >> 8) & 0xFF),
+            UInt8(totalParts & 0xFF),
+            UInt8((mtu >> 8) & 0xFF),
+            UInt8(mtu & 0xFF)
+        ])
+        peripheral.writeValue(data, for: rxCharacteristic, type: .withResponse)
+    }
+    
+    private func sendNextChunk() {
+        guard !isCancelled else {
+            print("OTA update cancelled.")
+            return
+        }
+        
+        if currentOffset < firmwareData.count {
+            let endOffset = min(currentOffset + chunkSize, firmwareData.count)
+            let chunk = firmwareData.subdata(in: currentOffset..<endOffset)
+            let numberOfPackets = (endOffset - currentOffset + mtu - 1) / mtu
+            
+            for packetIndex in 0..<numberOfPackets {
+                let packetStart = currentOffset + packetIndex * mtu
+                let packetEnd = min(packetStart + mtu, endOffset)
+                let packet = chunk.subdata(in: packetStart - currentOffset..<packetEnd - currentOffset)
+                var command = Data([0xFB, UInt8(packetIndex)])
+                command.append(packet)
+                peripheral.writeValue(command, for: rxCharacteristic, type: .withResponse)
+            }
+            
+            let chunkLength = endOffset - currentOffset
+            let partIndex = currentOffset / chunkSize
+            let fcCommand = Data([
+                0xFC,
+                UInt8((chunkLength >> 8) & 0xFF),
+                UInt8(chunkLength & 0xFF),
+                UInt8((partIndex >> 8) & 0xFF),
+                UInt8(partIndex & 0xFF)
+            ])
+            peripheral.writeValue(fcCommand, for: rxCharacteristic, type: .withResponse)
+            
+            chunksSent += 1
+            let progress = min(100.0, (Double(chunksSent) / Double(totalChunks)) * 100.0)
+            print("Progress updated: \(progress)%")
+            DispatchQueue.main.async {
+                self.delegate?.otaUpdateProgress(Float(progress))
+            }
+            
+            currentOffset += chunkSize
+        } else {
+            sendOtaCommand(byte: 0xF2)
+        }
+    }
+    
+    func processReceivedData(_ data: Data) {
+        guard data.count > 0 else { return }
+        
+        let command = data[0]
+        switch command {
+        case 0xAA:
+            let transferMode = data[1]
+            print("Transfer mode:", transferMode)
+            if transferMode == 1 {
+                for _ in 0..<totalChunks {
+                    sendNextChunk()
+                }
+            } else {
+                sendNextChunk()
+            }
+        case 0xF1:
+            let nextPart = Int(data[1]) * 256 + Int(data[2])
+            currentOffset = nextPart * chunkSize
+            print("Received command 0xF1, setting next part: \(nextPart)")
+            sendNextChunk()
+        case 0xF2:
+            print("Installing firmware")
+            delegate?.otaUpdateComplete()
+        case 0x0F:
+            let result = String(data: data[1...], encoding: .utf8) ?? "Unknown error"
+            print("OTA result: ", result)
+            if result.contains("Success") {
+                delegate?.otaUpdateComplete()
+            } else {
+                delegate?.otaUpdateFailed(error: result)
+            }
+        default:
+            print("Unexpected command received: \(command)")
+        }
+    }
+}
+
+extension OTAManager: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        if let error = error {
+            print("Error updating value for characteristic \(characteristic.uuid): \(error.localizedDescription)")
+            return
+        }
+
+        guard let value = characteristic.value else {
+            print("No data received for characteristic \(characteristic.uuid).")
+            return
+        }
+
+        if characteristic.uuid.uuidString.lowercased() == txCharacteristic.uuid.uuidString.lowercased() {
+            processReceivedData(value)
+        } else {
+            print("Unexpected characteristic UUID: \(characteristic.uuid.uuidString)")
+        }
+    }
+}
+
+
