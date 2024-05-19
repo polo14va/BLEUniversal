@@ -295,7 +295,6 @@
 				EB08AC5E2BFA6C98008E4880 /* Sources */,
 				EB08AC5F2BFA6C98008E4880 /* Frameworks */,
 				EB08AC602BFA6C98008E4880 /* Resources */,
-				EB6CA5732BFA8CD900E420C0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -411,26 +410,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		EB6CA5732BFA8CD900E420C0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Auto-increment the build number every time the project is built\nif [ \"${CONFIGURATION}\" = \"Release\" ]; then\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EB08AC5E2BFA6C98008E4880 /* Sources */ = {
@@ -643,7 +622,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -694,7 +673,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
