@@ -622,7 +622,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -673,7 +673,7 @@
 				CODE_SIGN_ENTITLEMENTS = BLEuniversal/BLEuniversal.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 39;
+				CURRENT_PROJECT_VERSION = 40;
 				DEVELOPMENT_ASSET_PATHS = "\"BLEuniversal/Preview Content\"";
 				DEVELOPMENT_TEAM = 6XL869H35H;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -813,7 +813,7 @@
 				EB08AC862BFA6C99008E4880 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EB08AC872BFA6C99008E4880 /* Build configuration list for PBXNativeTarget "BLEuniversal" */ = {
 			isa = XCConfigurationList;
@@ -822,7 +822,7 @@
 				EB08AC892BFA6C99008E4880 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EB08AC8A2BFA6C99008E4880 /* Build configuration list for PBXNativeTarget "BLEuniversalTests" */ = {
 			isa = XCConfigurationList;
@@ -831,7 +831,7 @@
 				EB08AC8C2BFA6C99008E4880 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		EB08AC8D2BFA6C99008E4880 /* Build configuration list for PBXNativeTarget "BLEuniversalUITests" */ = {
 			isa = XCConfigurationList;
@@ -840,7 +840,7 @@
 				EB08AC8F2BFA6C99008E4880 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
